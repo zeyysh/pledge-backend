@@ -1,6 +1,6 @@
 DJANGO_SECRET_KEY='django-insecure-wn!zc3)=ck*3y#r2q&q!w^$mlvd7tr#051rt9#r3)c0-5j_n*9'
-DEBUG=True
-DJANGO_ALLOWED_HOSTS='193.176.243.57','*','127.0.0.1'
+DEBUG=False
+DJANGO_ALLOWED_HOSTS='193.176.243.57','127.0.0.1'
 DATABASE_ENGINE=postgresql_psycopg2
 DATABASE_NAME=pledge
 DATABASE_USERNAME=postgres

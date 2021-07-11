@@ -2,6 +2,7 @@ from django.db import models
 from pledge.users.models import User, Invite
 from django.utils.timezone import now
 from django.utils import timezone
+from pledge.document.models import Signatory
 
 STATUS_CHOICE = {
     (True, 'accepted'),
@@ -11,7 +12,7 @@ STATUS_CHOICE = {
 
 class Pledge(models.Model):
     name = models.TextField(max_length=100)
-    lender = models.OneToOneField(User, on_delete=models.CASCADE)
+    # lender = models.OneToOneField(User, on_delete=models.CASCADE)
     borrower = models.OneToOneField(User, on_delete=models.CASCADE, related_name='borrower_user')
     amount = models.IntegerField()
     status = models.BooleanField(choices=STATUS_CHOICE, null=True)
@@ -29,13 +30,20 @@ class Lender(models.Model):
 class Borrower(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='lender_user')
     pledges = models.ForeignKey("Pledge", on_delete=models.CASCADE, null=True, related_name='lender_pledges')
-    connected_bank_account = models.CharField()
+    connected_bank_account = models.OneToOneField("bankAccount", on_delete=models.CASCADE)
     family_members = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class bankAccount(models.Model):
+    card_id = models.DecimalField()
+    expire_date = models.DateField()
+    bank_name = models.CharField(max_length=100)
 
 
 class Proposal(models.Model):
     pledge = models.ForeignKey('Pledge', on_delete=models.CASCADE)
     borrower = models.OneToOneField("Borrower", on_delete=models.CASCADE, related_name='lender_user')
+    lender = models.ForeignKey('Lender', on_delete=models.CASCADE)
     description_link = models.URLField()
     approved = models.BooleanField()
     response = models.ForeignKey('ProposalResponse', on_delete=models.CASCADE)
@@ -64,6 +72,7 @@ class Contract(models.Model):
     name = models.TextField(max_length=100)
     description = models.TextField(max_length=250)
     sign_status = models.CharField(choices=SIGN_STATUS)
+    lender_sign = models.OneToOneField(Signatory, on_delete=models.CASCADE)
 
 
 class Payment(models.Model):

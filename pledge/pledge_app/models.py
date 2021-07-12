@@ -12,8 +12,8 @@ STATUS_CHOICE = {
 
 class Pledge(models.Model):
     name = models.TextField(max_length=100)
-    # lender = models.OneToOneField(User, on_delete=models.CASCADE)
-    borrower = models.OneToOneField(User, on_delete=models.CASCADE, related_name='borrower_user')
+    lender = models.ManyToManyField('Lender', on_delete=models.CASCADE)
+    borrower = models.ForeignKey('Borrower', on_delete=models.CASCADE, related_name='borrower_user')
     amount = models.IntegerField()
     status = models.BooleanField(choices=STATUS_CHOICE, null=True)
     created_date = models.DateTimeField(default=timezone.now)
@@ -24,30 +24,16 @@ class Pledge(models.Model):
 
 class Lender(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='lender_user')
-    pledges = models.ForeignKey("Pledge", on_delete=models.CASCADE, null=True, related_name='lender_pledges')
 
 
 class Borrower(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='lender_user')
-    pledges = models.ForeignKey("Pledge", on_delete=models.CASCADE, null=True, related_name='lender_pledges')
     connected_bank_account = models.OneToOneField("bankAccount", on_delete=models.CASCADE)
     family_members = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class bankAccount(models.Model):
-    card_id = models.DecimalField()
-    expire_date = models.DateField()
-    bank_name = models.CharField(max_length=100)
-
-
-class Proposal(models.Model):
-    pledge = models.ForeignKey('Pledge', on_delete=models.CASCADE)
-    borrower = models.OneToOneField("Borrower", on_delete=models.CASCADE, related_name='lender_user')
-    lender = models.ForeignKey('Lender', on_delete=models.CASCADE)
-    description_link = models.URLField()
-    approved = models.BooleanField()
-    response = models.ForeignKey('ProposalResponse', on_delete=models.CASCADE)
-    invite = models.ForeignKey(Invite, on_delete=models.CASCADE)
+    token = models.CharField(max_length=150)
 
 
 class ProposalResponse(models.Model):
@@ -60,7 +46,25 @@ class ProposalResponse(models.Model):
     status = models.CharField(choices=PROPOSAL_STATUS)
     amount = models.FloatField()
     additional_information = models.URLField()
-    counter = models.BooleanField()  # ??
+    counter = models.OneToOneField('Counter', on_delete=models.CASCADE)
+    proposal = models.ForeignKey('Proposal', on_delete=models.CASCADE)
+
+
+class Proposal(models.Model):
+    pledge = models.ForeignKey('Pledge', on_delete=models.CASCADE)
+    borrower = models.OneToOneField("Borrower", on_delete=models.CASCADE, related_name='lender_user')
+    lender = models.ForeignKey('Lender', on_delete=models.CASCADE)
+    description_link = models.URLField()
+    approved = models.BooleanField()
+    invite = models.ForeignKey(Invite, on_delete=models.CASCADE)
+
+
+class Counter(models.Model):
+    amount = models.FloatField()
+    interest_rate = models.FloatField()
+    term = models.TextField(max_length=250)
+    monthly_payment = models.FloatField()
+    message = models.TextField(max_length=1000)
 
 
 class Contract(models.Model):
@@ -87,7 +91,6 @@ class Payment(models.Model):
         'canceled',
         'failed',
     )
-    lender = models.ForeignKey('Lender', on_delete=models.CASCADE)
     pledge = models.ForeignKey('Pledge', on_delete=models.CASCADE)
     type_payment = models.CharField(choices=TYPE_PAYMENT, default=1)
     status_payment = models.IntegerField(choices=STATUS_PAYMENT, default=1)

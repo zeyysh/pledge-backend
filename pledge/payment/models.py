@@ -8,7 +8,6 @@ from django.utils.translation import gettext_lazy as _
 from . import FraudStatus
 from . import PaymentStatus
 from . import PurchasedItem
-from .core import provider_factory
 
 
 class BasePayment(models.Model):
@@ -103,9 +102,9 @@ class BasePayment(models.Model):
     def __str__(self):
         return self.variant
 
-    def get_form(self, data=None):
-        provider = provider_factory(self.variant)
-        return provider.get_form(self, data=data)
+    # def get_form(self, data=None):
+    #     provider = provider_factory(self.variant)
+    #     return provider.get_form(self, data=data)
 
     def get_purchased_items(self) -> Iterable[PurchasedItem]:
         return []
@@ -119,33 +118,33 @@ class BasePayment(models.Model):
     def get_process_url(self) -> str:
         return reverse("process_payment", kwargs={"token": self.token})
 
-    def capture(self, amount=None):
-        if self.status != PaymentStatus.PREAUTH:
-            raise ValueError("Only pre-authorized payments can be captured.")
-        provider = provider_factory(self.variant)
-        amount = provider.capture(self, amount)
-        if amount:
-            self.captured_amount = amount
-            self.change_status(PaymentStatus.CONFIRMED)
+    # def capture(self, amount=None):
+    #     if self.status != PaymentStatus.PREAUTH:
+    #         raise ValueError("Only pre-authorized payments can be captured.")
+    #     provider = provider_factory(self.variant)
+    #     amount = provider.capture(self, amount)
+    #     if amount:
+    #         self.captured_amount = amount
+    #         self.change_status(PaymentStatus.CONFIRMED)
 
-    def release(self):
-        if self.status != PaymentStatus.PREAUTH:
-            raise ValueError("Only pre-authorized payments can be released.")
-        provider = provider_factory(self.variant)
-        provider.release(self)
-        self.change_status(PaymentStatus.REFUNDED)
+    # def release(self):
+    #     if self.status != PaymentStatus.PREAUTH:
+    #         raise ValueError("Only pre-authorized payments can be released.")
+    #     provider = provider_factory(self.variant)
+    #     provider.release(self)
+    #     self.change_status(PaymentStatus.REFUNDED)
 
-    def refund(self, amount=None):
-        if self.status != PaymentStatus.CONFIRMED:
-            raise ValueError("Only charged payments can be refunded.")
-        if amount:
-            if amount > self.captured_amount:
-                raise ValueError(
-                    "Refund amount can not be greater then captured amount"
-                )
-            provider = provider_factory(self.variant)
-            amount = provider.refund(self, amount)
-            self.captured_amount -= amount
-        if self.captured_amount == 0 and self.status != PaymentStatus.REFUNDED:
-            self.change_status(PaymentStatus.REFUNDED)
-        self.save()
+    # def refund(self, amount=None):
+    #     if self.status != PaymentStatus.CONFIRMED:
+    #         raise ValueError("Only charged payments can be refunded.")
+    #     if amount:
+    #         if amount > self.captured_amount:
+    #             raise ValueError(
+    #                 "Refund amount can not be greater then captured amount"
+    #             )
+    #         provider = provider_factory(self.variant)
+    #         amount = provider.refund(self, amount)
+    #         self.captured_amount -= amount
+    #     if self.captured_amount == 0 and self.status != PaymentStatus.REFUNDED:
+    #         self.change_status(PaymentStatus.REFUNDED)
+    #     self.save()

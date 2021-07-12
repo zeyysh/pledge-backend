@@ -7,9 +7,9 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import pgettext_lazy
 
-from payments import version
+#from payments import version
 
-__version__ = version.version
+#__version__ = version.version
 
 
 class PurchasedItem(NamedTuple):

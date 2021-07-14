@@ -9,3 +9,6 @@ def sign_completed():
 def get_envelope_status():
     pass
 
+
+def create_template():
+    pass

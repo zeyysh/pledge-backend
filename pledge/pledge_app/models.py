@@ -1,8 +1,8 @@
 from django.db import models
-from pledge.users.models import User, Invite
-from django.utils.timezone import now
 from django.utils import timezone
-from pledge.document.models import Signatory
+from django.utils.timezone import now
+
+from pledge.users.models import User, Invite
 
 STATUS_CHOICE = {
     (True, 'accepted'),
@@ -76,7 +76,7 @@ class Contract(models.Model):
     name = models.TextField(max_length=100)
     description = models.TextField(max_length=250)
     sign_status = models.CharField(choices=SIGN_STATUS)
-    lender_sign = models.OneToOneField(Signatory, on_delete=models.CASCADE)
+    # lender_sign = models.OneToOneField(Signatory, on_delete=models.CASCADE)
 
 
 class Payment(models.Model):

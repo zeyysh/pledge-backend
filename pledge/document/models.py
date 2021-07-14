@@ -40,7 +40,6 @@ class Document(models.Model):
     file_extension = models.ForeignKey('contenttypes.ContentType', null=True, blank=True, editable=False,
                                        on_delete=models.CASCADE)
     document_id = models.IntegerField(null=True, blank=True, editable=False)
-    author = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)  # ?? lender
     signer = models.ManyToManyField("Recipient", on_delete=models.CASCADE)  # ??
     tab = models.ForeignKey("Tab", on_delete=models.CASCADE)  # Many here
     status = models.CharField(max_length=55)

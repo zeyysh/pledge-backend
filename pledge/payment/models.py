@@ -1,6 +1,6 @@
 from django.db import models
 
-from pledge.users.models import User
+from users.models import User
 
 CUSTOMER_TYPE = [
     ('', 'unverified'),

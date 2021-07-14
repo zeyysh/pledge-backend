@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
-from pledge.users.models import User, Invite
+from users.models import User, Invite
 
 STATUS_CHOICE = {
     (True, 'accepted'),
@@ -24,11 +24,10 @@ class Pledge(models.Model):
 
 class Lender(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='lender_user')
-    pass
 
 
 class Borrower(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='lender_user')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='borrower_user')
     connected_bank_account = models.OneToOneField("bankAccount", on_delete=models.CASCADE)
     family_members = models.ForeignKey(User, on_delete=models.CASCADE)
 

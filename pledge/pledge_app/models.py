@@ -12,7 +12,7 @@ STATUS_CHOICE = {
 
 class Pledge(models.Model):
     name = models.TextField(max_length=100)
-    lender = models.ManyToManyField('Lender', on_delete=models.CASCADE)
+    lender = models.ManyToManyField('Lender')
     borrower = models.ForeignKey('Borrower', on_delete=models.CASCADE, related_name='borrower_user')
     amount = models.IntegerField()
     status = models.BooleanField(choices=STATUS_CHOICE, null=True)
@@ -24,6 +24,7 @@ class Pledge(models.Model):
 
 class Lender(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='lender_user')
+    pass
 
 
 class Borrower(models.Model):
@@ -38,12 +39,12 @@ class bankAccount(models.Model):
 
 class ProposalResponse(models.Model):
     PROPOSAL_STATUS = [
-        'accepted',
-        'rejected',
-        'countered',
+        ('', 'accepted'),
+        ('', 'rejected'),
+        ('', 'countered'),
     ]
     lender = models.OneToOneField("Lender", on_delete=models.CASCADE)
-    status = models.CharField(choices=PROPOSAL_STATUS)
+    status = models.CharField(choices=PROPOSAL_STATUS, max_length=50)
     amount = models.FloatField()
     additional_information = models.URLField()
     counter = models.OneToOneField('Counter', on_delete=models.CASCADE)
@@ -69,30 +70,30 @@ class Counter(models.Model):
 
 class Contract(models.Model):
     SIGN_STATUS = [
-        'lender_signed',
-        'borrower_signed',
-        'unsigned',
+        ('', 'lender_signed'),
+        ('', 'borrower_signed'),
+        ('', 'unsigned'),
     ]
     name = models.TextField(max_length=100)
     description = models.TextField(max_length=250)
-    sign_status = models.CharField(choices=SIGN_STATUS)
+    sign_status = models.CharField(choices=SIGN_STATUS, max_length=50)
     # lender_sign = models.OneToOneField(Signatory, on_delete=models.CASCADE)
 
 
 class Payment(models.Model):
-    TYPE_PAYMENT = (
-         'automatic',
-         'off_platform',
-    )
-    STATUS_PAYMENT = (
-        'init',
-        'pending',
-        'finish',
-        'canceled',
-        'failed',
-    )
+    TYPE_PAYMENT = [
+        ('', 'automatic'),
+        ('', 'off_platform'),
+    ]
+    STATUS_PAYMENT = [
+        ('', 'init'),
+        ('', 'pending'),
+        ('', 'finish'),
+        ('', 'canceled'),
+        ('', 'failed'),
+    ]
     pledge = models.ForeignKey('Pledge', on_delete=models.CASCADE)
-    type_payment = models.CharField(choices=TYPE_PAYMENT, default=1)
+    type_payment = models.CharField(choices=TYPE_PAYMENT, default=1, max_length=50)
     status_payment = models.IntegerField(choices=STATUS_PAYMENT, default=1)
     information = models.CharField(max_length=255, default='0')
     amount = models.FloatField()

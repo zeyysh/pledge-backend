@@ -1,5 +1,5 @@
+from django.contrib.auth.models import AbstractUser, Group, BaseUserManager
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class UserManager(models.Model, BaseUserManager):
@@ -35,37 +35,16 @@ class UserManager(models.Model, BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser, models.Model):
-    username = None
+class User(AbstractUser):
     name = models.CharField(max_length=128, null=True)
     email = models.EmailField(verbose_name='email field', max_length=60, unique=True)
+    groups = models.ManyToManyField(Group)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='date joined', auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    class Meta:
-        verbose_name = 'user'
-        verbose_name_plural = 'users'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-
-    def get_full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
-    def get_short_name(self):
-        return self.first_name
-
-    def __str__(self):
-        return self.email
 
 
 class Invite(models.Model):

@@ -42,7 +42,17 @@ INSTALLED_APPS = [
     'notification',
     'payment',
     'pledge_app',
+    'rest_framework',
+    'rest_framework_swagger',
 ]
+
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+#     ],
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

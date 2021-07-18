@@ -4,7 +4,6 @@ from users.models import User
 
 
 class Notification(models.Model):
-    id = models.IntegerField(primary_key=True)
     source = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='source')
     source_display_name = models.CharField(max_length=150, null=True)
     recipient_user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='recipient_user')

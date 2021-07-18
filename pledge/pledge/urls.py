@@ -1,27 +1,24 @@
-"""pledge URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework import routers
 from rest_framework.schemas import get_schema_view
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
+from users import views as uviews
+
+schema_view = get_schema_view(title='Pledge API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
+
+router = routers.DefaultRouter()
+router.register('users', uviews.UserViewSet, basename='user-list')
+router.register('api/login', uviews.LoginView, basename='login')
 urlpatterns = [
+    path('', schema_view),
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('docs/', include('document.urls')),
-    path('openapi/', get_schema_view(
-        title="School Service",
-        description="API developers hpoing to use our service"
-    ), name='openapi-schema'),
+    path('document/', include('document.urls')),
+    path('notification/', include('notification.urls')),
+    path('payment/', include('payment.urls')),
+    path('pledge_app/', include('pledge_app.urls')),
+    path('users_url/', include('users.urls')),
+    path('openapi/', get_schema_view()),
 ]

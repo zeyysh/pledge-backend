@@ -21,7 +21,6 @@ CUSTOMER_STATUS = [
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -32,7 +31,6 @@ class Customer(models.Model):
 
 class FundingSource(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
-    id = models.IntegerField(primary_key=True)
     status = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     bankAccountType = models.CharField(max_length=100)
@@ -55,7 +53,6 @@ class Transfer(models.Model):
     destination_funding_source = models.OneToOneField('FundingSource', on_delete=models.CASCADE)
     cancel = models.BooleanField()
     fees = models.FloatField()
-    transfer_id = models.IntegerField()
     status = models.CharField(max_length=50)
     amount = models.FloatField()
     created = models.DateTimeField(auto_now=True)

@@ -5,3 +5,4 @@ django-rest-swagger==2.2.0
 djangorestframework==3.12.4
 PyYAML
 six
+djangorestframework-api-key

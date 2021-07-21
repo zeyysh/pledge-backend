@@ -12,7 +12,7 @@ from users import views as uviews
 schema_view = get_schema_view(title='API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 router = routers.DefaultRouter()
 router.register('users', uviews.UserViewSet, basename='user-list')
-router.register('api/login', uviews.LoginView, basename='login')
+router.register('login', uviews.LoginView, basename='login')
 urlpatterns = [
     # path("", image_upload, name="upload"),
     path('api/', include(router.urls)),
@@ -23,6 +23,8 @@ urlpatterns = [
     path('notification/', include('notification.urls')),
     path('payment/', include('payment.urls')),
     path('pledge_app/', include('pledge_app.urls')),
+    path('users/', include('users.urls')),
+
 ]
 
 if bool(settings.DEBUG):

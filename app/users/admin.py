@@ -1,4 +1,3 @@
-from admin_helpers import AdminChangeLinksMixin
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from django.contrib.auth.admin import UserAdmin
@@ -7,7 +6,7 @@ from rest_framework_api_key.admin import APIKeyModelAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import OrganizationAPIKey
 # from django.contrib.auth.admin import UserAdmin
-from .models import User, Organization, Company
+from .models import User, Organization
 
 
 @admin.register(OrganizationAPIKey)
@@ -57,23 +56,6 @@ class BaseModelAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
         return qs.filter(companies__in=request.user.companies.all())
-        # return qs.filter(company=request.user.company)
-
-
-class CompanyAdmin(AdminChangeLinksMixin, BaseModelAdmin):
-    list_display = ('name', 'project_companies_link',)
-    changelist_links = ('project_companies', 'company_strategies', 'company_products')
-    search_fields = ('name',)
-
-
-'''
-class UserAdmin(AdminChangeLinksMixin, UserAdmin):
-    list_display = ('name', 'email', 'date_joined', 'is_active')
-    list_filter = ('is_active',)
-    filter_horizontal = ('groups', 'guest_organizations')
-    #change_links = ('organization',)
-    search_fields = ('name', 'email')
-'''
 
 
 class CustomUserAdmin(UserAdmin, BaseModelAdmin):
@@ -93,14 +75,14 @@ class CustomUserAdmin(UserAdmin, BaseModelAdmin):
         (None, {
             'classes': ('wide',),
             'fields': (
-            'name', 'email', 'password1', 'password2', 'is_staff', 'is_admin', 'is_superuser', 'is_active', 'groups',
-            'organizations', 'companies', 'guest_organizations')}
+                'name', 'email', 'password1', 'password2', 'is_staff', 'is_admin', 'is_superuser', 'is_active',
+                'groups',
+                'organizations', 'companies', 'guest_organizations')}
          ),
     )
     search_fields = ('email', 'name')
     ordering = ('email',)
 
 
-admin.site.register(Company, CompanyAdmin)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Organization)

@@ -11,19 +11,19 @@ from rest_framework import status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet, ModelViewSet
 
-import users.permissions as perm
 from users.models import Organization, Company
-# from django.contrib.auth.models import User
 from users.models import User, Invite
 from users.serializers import UserSerializer, OrganizationSerializer, CompanySerializer
 from .forms import LoginForm, SignUpForm
 from .helper import account_activation_token
 
 
+@api_view(['POST'])
 def login_view(request):
     form = LoginForm(request.POST or None)
 
@@ -46,6 +46,7 @@ def login_view(request):
     return render(request, "accounts/login.html", {"form": form, "msg": msg})
 
 
+@api_view(['POST'])
 def register_user(request):
     msg = None
     success = False
@@ -108,6 +109,7 @@ def register_user(request):
     return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
 
 
+@api_view(['POST'])
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -132,48 +134,16 @@ class OrganizationViewSet(ModelViewSet):
     """
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
-    permission_classes = [perm.IsIntuitxAdminUserWithAuth |
-                          perm.IsSuperAdminUserWithAuth]
 
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [perm.IsIntuitxAdminUserWithAuth |
-                          perm.IsModelerUserWithAuth |
-                          perm.IsDbankerUserWithAuth |
-                          perm.IsSuperAdminUserWithAuth |
-                          perm.IsAdminUserWithAuth]
-
-    '''
-    def get_permissions(self):
-        permission_classes = []
-        if self.action == 'create':
-            permission_classes = [((perm.IsAdminUserWithAuth|perm.IsSuperAdminUserWithAuth) & perm.HasTenantAccess) |
-                    perm.IsIntuitxAdminUserWithAuth]
-        elif self.action == 'list':
-            permission_classes = [((perm.IsAdminUserWithAuth|perm.IsSuperAdminUserWithAuth) & perm.HasTenantAccess) |
-                    perm.IsIntuitxAdminUserWithAuth]
-        elif self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update':
-            permission_classes = [((perm.IsAdminUser|perm.IsSuperAdminUser) & perm.HasTenantAccess & IsAuthenticated) |
-                    perm.IsIntuitxAdminUser & IsAuthenticated |
-                    perm.IsLoggedInUsers & IsAuthenticated]
-        elif self.action == 'destroy':
-            permission_classes = [((perm.IsAdminUser|perm.IsSuperAdminUser) & perm.HasTenantAccess & IsAuthenticated) |
-                    perm.IsIntuitxAdminUser & IsAuthenticated]
-        return [permission() for permission in permission_classes]
-    '''
-
-    # def get_queryset(self):
-    #    if self.action == 'create' and perm._is_in_group(self.user, 'IntuitxAdmin'):
-    #        pass
 
 
 class CompanyViewSet(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
-    permission_classes = [perm.IsIntuitxAdminUserWithAuth |
-                          perm.IsSuperAdminUserWithAuth]
 
 
 class LoginView(ViewSet):

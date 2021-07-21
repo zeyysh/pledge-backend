@@ -8,7 +8,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 
-# from django.contrib.auth.models import User
 from users.models import User
 
 
@@ -39,13 +38,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class SignUpForm(UserCreationForm):
-    '''username = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "placeholder" : "Username",                
-                "class": "form-control"
-            }
-        ))'''
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
@@ -91,26 +83,3 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('email',)
-
-
-'''class CustomUserCreationForm(forms.ModelForm):
-    password = forms.CharField(validators=[validate_password],
-        widget=forms.PasswordInput(
-            attrs={
-                "placeholder" : "Password",                
-                "class": "form-control",
-                "id":"myInput"
-            }
-        ))
-        
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={
-                "placeholder" : "Email",                
-                "class": "form-control"
-            }
-        ))
-
-    class Meta(UserCreationForm):
-        model = User
-        fields = ('email','password')'''

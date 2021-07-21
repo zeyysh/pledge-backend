@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework import generics
 
 from .models import Pledge
@@ -12,3 +13,7 @@ class PledgeList(generics.ListCreateAPIView):
 class PledgeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pledge.objects.all()
     serializer_class = PledgeSerializer
+
+
+def swagger_view(request):
+    return render(request, 'dist/index.html')

@@ -1,0 +1,7 @@
+Django==3.2.5
+gunicorn==20.0.4
+psycopg2-binary==2.8.5
+django-rest-swagger==2.2.0
+djangorestframework==3.12.4
+PyYAML
+six

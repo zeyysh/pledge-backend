@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This is a sample Petstore server.  You can find \nout more about Swagger at \n[http://swagger.io](http://swagger.io) or on \n[irc.freenode.net, #swagger](http://swagger.io/irc/).\n",
+    "description": "Pledge.\n",
     "version": "1.0.0",
-    "title": "Swagger Petstore",
+    "title": "Swagger Pledge",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "apiteam@swagger.io"
@@ -13,11 +13,16 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/zeyysh/test/1.0.0",
   "tags": [
     {
       "name": "user",
       "description": "user profile information"
     }
+  ],
+  "schemes": [
+    "https"
   ],
   "paths": {
     "/user": {
@@ -85,6 +90,7 @@
           {
             "in": "body",
             "name": "reg",
+            "required": false,
             "schema": {
               "$ref": "#/definitions/register"
             }
@@ -127,11 +133,11 @@
         ],
         "parameters": [
           {
-            "in": "path",
             "name": "tel",
-            "type": "number",
+            "in": "path",
+            "description": "Send the user phone number to send the verification code (SMS)",
             "required": true,
-            "description": "Send the user phone number to send the verification code (SMS)"
+            "type": "number"
           }
         ],
         "responses": {
@@ -152,11 +158,6 @@
     }
   },
   "securityDefinitions": {
-    "pledge_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
-      "flow": "implicit"
-    },
     "api_key": {
       "type": "apiKey",
       "name": "api_key",
@@ -227,10 +228,5 @@
         }
       }
     }
-  },
-  "host": "virtserver.swaggerhub.com",
-  "basePath": "/Alireza1001/pledge/1.0.0",
-  "schemes": [
-    "https"
-  ]
+  }
 }

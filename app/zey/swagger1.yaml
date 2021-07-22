@@ -1,23 +1,24 @@
----
-swagger: "2.0"
+swagger: '2.0'
 info:
   description: |
-    .
+    * Each reponse is spposed to have a `status`, and the state of the key is either `seccessful` or `failed` 
+    * And a "message" in the same level as "status" called `message` to describe the situation
+    * Also as for the data that is expected in the response, there will be an `info` in which the useful part of the response shall be stored in there.
   version: 1.0.0
-  title: Swagger Petstore
+  title: Swagger Pledge
   termsOfService: http://swagger.io/terms/
   contact:
     email: apiteam@swagger.io
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-host: virtserver.swaggerhub.com
-basePath: /zeyysh/test/1.0.0
+# host: petstore.swagger.io
+# basePath: /v2
 tags:
   - name: user
     description: user profile information
-schemes:
-  - https
+# schemes:
+# - http
 paths:
   /user:
     get:
@@ -35,20 +36,20 @@ paths:
           required: true
           type: string
       responses:
-        "200":
+        200:
           description: successful operation
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/currentUserInfo'
-        "400":
+            $ref: '#/definitions/currentUser'
+        400:
           description: Bad request. Invalid or empty auth token.
-        "401":
+        405:
+          description: Invalid input.
+        401:
           description: Authorization information is missing or invalid.
-        "404":
-          description: Not found
-        "405":
-          description: Invalid input
+        404:
+          description: Not found.
+        default:
+          description: failed, message
       security:
         - api_key: [ ]
     post:
@@ -63,22 +64,134 @@ paths:
       parameters:
         - in: body
           name: reg
-          required: false
           schema:
             $ref: '#/definitions/register'
       responses:
-        "200":
-          description: Successful registration operation
-        "400":
+        200:
+          description: Registeration sent successfuly.
+          schema:
+            $ref: '#/definitions/registerResponse'
+        400:
           description: Bad request. Invalid or empty auth token.
-        "401":
+        401:
           description: Authorization information is missing or invalid.
-        "404":
-          description: Not found
-        "405":
-          description: Invalid input
+        404:
+          description: Not found.
+        405:
+          description: Invalid input.
         default:
-          description: Unexpected error
+          description: failed, message
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: Logs user into the system
+      operationId: userLogin
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          type: string
+      responses:
+        200:
+          description: logged in successfully
+          schema:
+            $ref: '#/definitions/login'
+        400:
+          description: Invalid username/password supplied
+
+  /user/login/{alt_method}:
+    post:
+      tags:
+        - user
+      summary: Logs user via google/facebook into the system
+      operationId: userAltLogin
+      produces:
+        - application/json
+      parameters:
+        - name: alt_method
+          in: path
+          description: The choosen method by user to login
+          required: true
+          type: string
+      responses:
+        200:
+          description: logged in successfully
+          schema:
+            $ref: '#/definitions/altlogin'
+        400:
+          description: Invalid username/password supplied
+
+  /user/password_reset/request/{email}:
+    post:
+      tags:
+        - user
+      operationId: passReset
+      summary: request to reset password (step 1)
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: email
+          type: string
+          required: true
+          description: The email provided by user
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/newpass_response'
+          description: status=successful, message=the verification code sent to your email
+        400:
+          description: status=failed, message=Bad request. Invalid or empty auth token.
+        405:
+          description: status=failed, message=Invalid input.
+        401:
+          description: status=failed, message=Authorization information is missing or invalid.
+        404:
+          description: status=failed, message=Not found.
+        default:
+          description: status=failed, message=...
+
+  /user/password_reset/new_pass:
+    post:
+      tags:
+        - user
+      operationId: setNewPass
+      summary: validate the code provided by user to reset account password
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: newPass
+          schema:
+            $ref: '#/definitions/newpass'
+          description: The validation code entered by user
+      responses:
+        200:
+          description: status=successful, message=your password has been successfully verified
+        400:
+          description: status=failed, message=Bad request.
+        405:
+          description: status=failed, message=Invalid input.
+        401:
+          description: status=failed, message=Invalid.
+        404:
+          description: status=failed, message=Not found.
+        default:
+          description: status=failed, message=...
+
   /user/{tel}:
     get:
       tags:
@@ -90,32 +203,118 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: tel
-          in: path
-          description: Send the user phone number to send the verification code (SMS)
-          required: true
+        - in: path
+          name: tel
           type: number
+          required: true
+          description: Send the user phone number to send the verification code (SMS)
       responses:
-        "200":
+        # what about "tel duplication status" ?
+        200:
           description: Verification code is sent.
-        "400":
+        400:
           description: Bad request. check the `tel` parameter. It has be a number.
-        "405":
+        405:
           description: Invalid input. It has be a number.
         default:
           description: Unexpected error
+
+
+
 securityDefinitions:
+  pledge_auth:
+    type: oauth2
+    authorizationUrl: http://petstore.swagger.io/oauth/dialog
+    flow: implicit
   api_key:
     type: apiKey
     name: api_key
     in: header
+
 definitions:
+  currentUser:
+    type: object
+    properties:
+      status:
+        type: string
+        example: successful/failed
+      message:
+        type: string
+        example: The parameters were invalid
+      info:
+        $ref: '#/definitions/currentUserInfo'
+
+  login:
+    type: object
+    properties:
+      status:
+        type: string
+        example: successful
+      message:
+        type: string
+        example: user logged into platform successfully
+      info:
+        $ref: '#/definitions/getLoginData'
+  getLoginData:
+    type: object
+    properties:
+      token:
+        type: string
+
+  altlogin:
+    type: object
+    properties:
+      status:
+        type: string
+        example: successful
+      message:
+        type: string
+        example: user logged into platform successfully
+      info:
+        $ref: '#/definitions/getAltLoginData'
+
+  getAltLoginData:
+    type: object
+    properties:
+      url:
+        type: string
+        example: google/facebook auth request url + apikey
+
+  newpass:
+    type: object
+    properties:
+      password:
+        type: string
+      password_confirm:
+        type: string
+      token:
+        type: string
+
+  newpass_response:
+    type: object
+    properties:
+      status:
+        type: string
+        example: successful
+      message:
+        type: string
+        example: The password has been reseted successfully
+      info:
+        $ref: '#/definitions/newpass_response_info'
+
+  newpass_response_info:
+    type: object
+    properties:
+      token:
+        type: string
+
   currentUserInfo:
     type: object
     properties:
       id:
         type: integer
         format: int64
+        example: 14
       name:
         type: string
         example: Jennifer Smith
@@ -131,11 +330,13 @@ definitions:
       networks:
         type: integer
         format: int64
+        example: 23
       biography:
         type: string
         example: Dallas, Texas
       photoUrls:
         type: string
+
   register:
     type: object
     properties:
@@ -151,7 +352,27 @@ definitions:
       birthDate:
         type: string
         format: date-time
+      # tel:
+      #   type: number
+      #   example: 034821332
       verificationCode:
         type: string
       terms:
         type: boolean
+
+  registerResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: successful/failed
+      message:
+        type: string
+        example: User is registered successfully
+
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Alireza1001/pledge/1.0.0
+schemes:
+  - https

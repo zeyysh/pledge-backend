@@ -11,5 +11,4 @@ urlpatterns = [
     path('document/', views.DocumentList.as_view()),
     path('envelope/<int:pk>/', views.EnvelopeDetail.as_view()),
     path('document/<int:pk>/', views.DocumentDetail.as_view()),
-
 ]

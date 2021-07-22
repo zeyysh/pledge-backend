@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from rest_framework import status
+from rest_framework import status, generics
 # from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from rest_framework.permissions import IsAuthenticated
@@ -16,11 +16,31 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet, ModelViewSet
 
-from users.models import Organization, Company
 from users.models import User, Invite
-from users.serializers import UserSerializer, OrganizationSerializer, CompanySerializer
+from users.serializers import UserSerializer
 from .forms import LoginForm, SignUpForm
 from .helper import account_activation_token
+
+
+@api_view(['POST'])
+def current_user(request):
+    current_user = request.user
+    return current_user.id
+
+
+@api_view(['POST'])
+def login_view_alt(request):
+    return True
+
+
+@api_view(['POST'])
+def password_reset(request):
+    return True
+
+
+@api_view(['POST'])
+def new_password(request):
+    return True
 
 
 @api_view(['POST'])
@@ -128,22 +148,14 @@ def activate(request, uidb64, token):
         # return HttpResponse('Activation link is invalid!')
 
 
-class OrganizationViewSet(ModelViewSet):
-    """
-    API endpoint that allows Organizations to be viewed or edited.
-    """
-    queryset = Organization.objects.all()
-    serializer_class = OrganizationSerializer
-
-
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class CompanyViewSet(ModelViewSet):
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class LoginView(ViewSet):

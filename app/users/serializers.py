@@ -11,7 +11,7 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id', 'name', 'email', 'groups', 'password')
+        fields = ('id', 'first_name', 'last_name', 'email', 'birth_date', 'phone_number', 'terms', 'password')
         model = User
         extra_kwargs = {'password': {'write_only': True}}
 

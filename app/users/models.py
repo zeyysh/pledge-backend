@@ -1,4 +1,6 @@
-from django.contrib.auth.models import AbstractUser, Group, BaseUserManager
+from datetime import date
+
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from rest_framework_api_key.models import AbstractAPIKey, BaseAPIKeyManager
 
@@ -34,11 +36,11 @@ class OrganizationAPIKey(AbstractAPIKey):
 
 
 class GeneralModel(models.Model):
-    organizations = models.ManyToManyField(Organization)
+    # organizations = models.ManyToManyField(Organization)
     # need to update how permissioning is done for different groups to account
     # for the change from a single ManyToOne User-Org relationship to ManyToMany
     # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='%(app_label)s_company_%(class)s')
-    companies = models.ManyToManyField(Company)
+    # companies = models.ManyToManyField(Company)
 
     class Meta:
         abstract = True
@@ -89,15 +91,19 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser, GeneralModel):
-    groups = models.ManyToManyField(Group)  # , on_delete=models.CASCADE)
+    # groups = models.ManyToManyField(Group)  # , on_delete=models.CASCADE)
     # Organizations relation is already set in the GeneralModel Abstract
     # organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, related_name='users')
-    guest_organizations = models.ManyToManyField(Organization, blank=True, related_name='guest_organizations_user')
-    name = models.CharField(max_length=128, null=True)
+    # guest_organizations = models.ManyToManyField(Organization, blank=True, related_name='guest_organizations_user')
+    first_name = models.CharField(max_length=128, null=True)
+    last_name = models.CharField(max_length=128, null=True)
     username = None
     email = models.EmailField(verbose_name='email field', max_length=60, unique=True)
+    birth_date = models.DateField(verbose_name='birth date', default=date.today, blank=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='date joined', auto_now=True)
+    last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
+    phone_number = models.CharField(max_length=50, default='091111111111')
+    terms = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -125,9 +131,9 @@ class User(AbstractUser, GeneralModel):
 class Invite(GeneralModel):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='sender_invite')
     receiver = models.EmailField()
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True,
-                                     related_name='organization_invite')
-    groups = models.ManyToManyField(Group)
+    # organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True,
+    #                                  related_name='organization_invite')
+    # groups = models.ManyToManyField(Group)
 
     # OAuth library for social/etc AUth providers: https://python-social-auth.readthedocs.io/en/latest/installing.html
     # https://django-allauth.readthedocs.io/en/latest/overview.html

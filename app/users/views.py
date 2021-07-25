@@ -6,7 +6,10 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from rest_framework import status, generics
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import generics
+from rest_framework import status
 # from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from rest_framework.permissions import IsAuthenticated
@@ -21,7 +24,30 @@ from users.serializers import UserSerializer
 from .forms import LoginForm, SignUpForm
 from .helper import account_activation_token
 
+response_schema_dic = {
+    "200": openapi.Response(
+        description="custom 200 description",
+        examples={
+            "application/json": {
+                "200": "200_value_1",
+                "200_key2": "200_valu",
+            }
+        }
+    ),
+    "205": openapi.Response(
+        description="custom 205 description",
+        examples={
+            "application/json": {
+                "205_key1": "205_value_1",
+                "205_key2": "205_value_2",
+            }
+        }
+    ),
+}
 
+
+@swagger_auto_schema(operation_description="partial_update description override", responses=response_schema_dic,
+                     method='post')
 @api_view(['POST'])
 def current_user(request):
     current_user = request.user
@@ -158,7 +184,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
 
-class LoginView(ViewSet):
+class LoginView(ViewSet, APIView):
     serializer_class = AuthTokenSerializer
     permission_classes = []
 

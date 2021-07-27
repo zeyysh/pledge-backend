@@ -2,9 +2,10 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from rest_auth.registration.views import VerifyEmailView, RegisterView
 from rest_framework import permissions
 from rest_framework import routers
 
@@ -29,11 +30,14 @@ router.register('users', uviews.UserViewSet, basename='user-list')
 router.register('login', uviews.LoginView, basename='login')
 urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('accounts/', include('rest_auth.urls')),
+    path('api/', include('rest_auth.urls')),
+    path('api/register/', include('rest_auth.registration.urls'), name="register"),
+    path('api/registration/', RegisterView.as_view(), name='account_signup'),
+    re_path(r'api/account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(),
+            name='account_confirm_email'),
     path('users/', include('users.urls')),
-    path('', schema_view),
     path("admin/", admin.site.urls),
     path('document/', include('document.urls')),
     path('notification/', include('notification.urls')),

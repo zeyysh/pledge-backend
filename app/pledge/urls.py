@@ -5,11 +5,11 @@ from django.contrib import admin
 from django.urls import path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_auth.registration.views import VerifyEmailView, RegisterView
 from rest_framework import permissions
 from rest_framework import routers
 
 from users import views as uviews
+from users.views import VerifyEmailView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -34,9 +34,7 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/', include('rest_auth.urls')),
     path('api/register/', include('rest_auth.registration.urls'), name="register"),
-    path('api/registration/', RegisterView.as_view(), name='account_signup'),
-    re_path(r'api/account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(),
-            name='account_confirm_email'),
+    path('api/register/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
     path('users/', include('users.urls')),
     path("admin/", admin.site.urls),
     path('document/', include('document.urls')),

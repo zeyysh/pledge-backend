@@ -1,3 +1,4 @@
+from allauth.account.views import ConfirmEmailView
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -6,8 +7,10 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_auth.registration.serializers import VerifyEmailSerializer
 from rest_framework import generics
 from rest_framework import status
 # from rest_framework.authentication import TokenAuthentication
@@ -15,6 +18,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet, ModelViewSet
@@ -23,6 +28,26 @@ from users.models import User
 from users.serializers import UserSerializer
 from .forms import LoginForm, SignUpForm
 from .helper import account_activation_token
+
+
+class VerifyEmailView(APIView, ConfirmEmailView):
+    permission_classes = (AllowAny,)
+    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+
+    def get_serializer(self, *args, **kwargs):
+        return VerifyEmailSerializer(*args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        raise MethodNotAllowed('GET')
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.kwargs['key'] = serializer.validated_data['key']
+        confirmation = self.get_object()
+        confirmation.confirm(self.request)
+        return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
+
 
 response_schema_dic = {
     "200": openapi.Response(

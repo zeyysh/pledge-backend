@@ -62,13 +62,26 @@ REST_REGISTRATION = {
 }
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'users.serializers.UserSerializer',
-    'REST_AUTH_REGISTER_SERIALIZERS': 'users.serializers.RegSerializer',
+    # 'REST_AUTH_REGISTER_SERIALIZERS': 'users.serializers.RegisterSerializer',
 }
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.RegisterSerializer'
+}
+REST_USE_JWT = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'zeynab1717@gmail.com'
+EMAIL_HOST_PASSWORD = 'fkgbcaimiujkizag'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'default from email'
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`

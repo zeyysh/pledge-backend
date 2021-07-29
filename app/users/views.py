@@ -1,4 +1,6 @@
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from django.http import HttpResponse
 from rest_auth.registration.views import SocialLoginView
 from rest_framework import generics
@@ -11,6 +13,15 @@ from rest_framework.viewsets import ViewSet
 
 from users.models import User
 from users.serializers import UserSerializer
+
+
+class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
+    basic_auth = False
+
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = CustomGoogleOAuth2Adapter
+    client_class = OAuth2Client
 
 
 class FacebookLogin(SocialLoginView):

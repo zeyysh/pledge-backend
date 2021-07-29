@@ -8,7 +8,6 @@ six
 djangorestframework-api-key
 drf-yasg==1.17.1
 django-allauth==0.42.0
-django-rest-registration==0.6.3
 django-rest-auth==0.9.5
 packaging
 djangorestframework-jwt==1.11.0

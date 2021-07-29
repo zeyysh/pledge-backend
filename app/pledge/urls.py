@@ -2,14 +2,14 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework import routers
 
 from users import views as uviews
-from users.views import VerifyEmailView
+from users.views import empty_view, FacebookLogin
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -34,7 +34,9 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/', include('rest_auth.urls')),
     path('api/register/', include('rest_auth.registration.urls'), name="register"),
-    path('api/register/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
+    path('api/register/verify-email/', empty_view, name='account_email_verification_sent'),
+    path('password-reset/<uidb64>/<token>/', empty_view, name='password_reset_confirm'),
+    url('api/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     path('users/', include('users.urls')),
     path("admin/", admin.site.urls),
     path('document/', include('document.urls')),

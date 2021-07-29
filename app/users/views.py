@@ -1,4 +1,5 @@
 from allauth.account.views import ConfirmEmailView
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -11,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_auth.registration.serializers import VerifyEmailSerializer
+from rest_auth.registration.views import SocialLoginView
 from rest_framework import generics
 from rest_framework import status
 # from rest_framework.authentication import TokenAuthentication
@@ -28,6 +30,14 @@ from users.models import User
 from users.serializers import UserSerializer
 from .forms import LoginForm, SignUpForm
 from .helper import account_activation_token
+
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+
+
+def empty_view(request):
+    return HttpResponse('')
 
 
 class VerifyEmailView(APIView, ConfirmEmailView):

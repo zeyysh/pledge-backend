@@ -6,9 +6,7 @@ from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from rest_framework import routers
 
-from users import views as uviews
 from users.views import empty_view, FacebookLogin
 
 schema_view = get_schema_view(
@@ -25,12 +23,10 @@ schema_view = get_schema_view(
 )
 # schema_view = get_schema_view(title='API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
 
-router = routers.DefaultRouter()
-router.register('users', uviews.UserViewSet, basename='user-list')
-router.register('login', uviews.LoginView, basename='login')
+
 urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/documentation/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/', include('rest_auth.urls')),
     path('api/register/', include('rest_auth.registration.urls'), name="register"),

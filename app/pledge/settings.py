@@ -72,6 +72,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:80",
     "http://127.0.0.1",
 ]
+SESSION_COOKIE_SAMESITE = None  # response header set-cookie:samesite=lax  Default: 'Lax'
+CSRF_COOKIE_SAMESITE = None
 CORS_ORIGIN_ALLOW = True
 SESSION_COOKIE_HTTPONLY = False
 REST_REGISTRATION = {

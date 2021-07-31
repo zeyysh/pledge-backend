@@ -55,7 +55,18 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'drf_yasg',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://193.176.243.57",
+    "http://193.176.243.57:140",
+    "https://api.domain.com",
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://localhost:80",
+    "http://localhost",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:80",
+    "http://127.0.0.1",
+]
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': False,
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,

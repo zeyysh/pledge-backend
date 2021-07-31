@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'notification',
     'payment',
     'pledge_app',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'drf_yasg',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': False,
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
@@ -105,6 +107,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

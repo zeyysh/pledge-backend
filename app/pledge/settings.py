@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'drf_yasg',
 ]
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://193.176.243.57",
     "http://193.176.243.57:140",
@@ -72,7 +73,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1",
 ]
 CORS_ORIGIN_ALLOW = True
-CORS_ALLOW_CREDENTIALS = None
 SESSION_COOKIE_HTTPONLY = False
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': False,

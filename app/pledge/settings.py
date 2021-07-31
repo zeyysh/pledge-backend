@@ -62,15 +62,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
     "http://localhost:3002",
+    "http://localhost:5555",
     "http://localhost:80",
     "http://localhost",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3002",
+    "http://127.0.0.1:5555",
     "http://127.0.0.1:80",
     "http://127.0.0.1",
 ]
 CORS_ORIGIN_ALLOW = True
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = None
 SESSION_COOKIE_HTTPONLY = False
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': False,

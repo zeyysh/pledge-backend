@@ -61,9 +61,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://api.domain.com",
     "http://localhost:8080",
     "http://localhost:8000",
+    "http://localhost:3002",
     "http://localhost:80",
     "http://localhost",
     "http://127.0.0.1:8000",
+    "http://127.0.0.1:3002",
     "http://127.0.0.1:80",
     "http://127.0.0.1",
 ]

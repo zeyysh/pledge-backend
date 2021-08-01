@@ -59,7 +59,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://193.176.243.57",
     "https://193.176.243.57",
-    "https://papp.rastava.com"
+    "https://papp.rastava.com",
     "http://193.176.243.57:140",
     "https://api.domain.com",
     "http://localhost:8080",
@@ -74,6 +74,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:80",
     "http://127.0.0.1",
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True

@@ -58,6 +58,8 @@ INSTALLED_APPS = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://193.176.243.57",
+    "https://193.176.243.57",
+    "https://papp.rastava.com"
     "http://193.176.243.57:140",
     "https://api.domain.com",
     "http://localhost:8080",

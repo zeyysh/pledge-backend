@@ -31,6 +31,9 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/user.conf.d:ro
       - letsencrypt:/etc/letsencrypt
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+
     depends_on:
       - web
 

@@ -22,18 +22,32 @@ services:
     env_file:
       - .env.prod.db
   nginx:
-    build: ./nginx
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
-      - /home/ubuntu/pledge/pledge-backend/app/certs/:/etc/nginx/certs
+    image: jonasal/nginx-certbot:latest
+    restart: unless-stopped
+    environment:
+      - CERTBOT_EMAIL==zeynab1717@gmail.com
+      - STAGING
+      - DHPARAM_SIZE
+      - RSA_KEY_SIZE
+      - ELLIPTIC_CURVE
+      - USE_ECDSA
+      - RENEWAL_INTERVAL
+      - DEBUG
+    env_file:
+      - cerbotenv
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - nginx_secrets:/etc/letsencrypt
+      - ./user_conf.d:/etc/nginx/user_conf.d
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
     depends_on:
       - web
 
 volumes:
+  nginx_secrets:
   postgres_data:
   static_volume:
   media_volume:

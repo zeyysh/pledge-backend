@@ -7,7 +7,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-from users.views import empty_view, FacebookLogin, GoogleLogin
+from users.views import empty_view, FacebookLogin, GoogleLogin, example_view
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -34,6 +34,7 @@ urlpatterns = [
     url('api/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url('api/google/$', GoogleLogin.as_view(), name='google_login'),
     path('users/', include('users.urls')),
+    path('api/auth/', example_view, name='auth check'),
     path("admin/", admin.site.urls),
     # path('document/', include('document.urls')),
     # path('notification/', include('notification.urls')),

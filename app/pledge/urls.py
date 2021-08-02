@@ -30,7 +30,7 @@ urlpatterns = [
     path('api/', include('rest_auth.urls')),
     path('api/register/', include('rest_auth.registration.urls'), name="register"),
     path('api/register/verify-email/', empty_view, name='account_email_verification_sent'),
-    path('password-reset/<uidb64>/<token>/', empty_view, name='password_reset_confirm'),
+    path('password-reset/uid=<uidb64>/token=<token>/', empty_view, name='password_reset_confirm'),
     url('api/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url('api/google/$', GoogleLogin.as_view(), name='google_login'),
     path('users/', include('users.urls')),

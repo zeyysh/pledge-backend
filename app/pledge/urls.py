@@ -33,6 +33,7 @@ urlpatterns = [
     path('password-reset/<uidb64>/<token>/', empty_view, name='password_reset_confirm'),
     url('api/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url('api/google/$', GoogleLogin.as_view(), name='google_login'),
+    url(r'^accounts/', include('allauth.urls'), name='socialaccount_signup'),
     path('users/', include('users.urls')),
     path('api/auth/', example_view, name='auth check'),
     path("admin/", admin.site.urls),

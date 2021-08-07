@@ -66,4 +66,5 @@ def example_view(request, format=None):
     content = {
         'detail': 'Verified',  # None
     }
+
     return Response(content)

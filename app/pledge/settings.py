@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'notification',
     'payment',
     'pledge_app',
+    'user_verification',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -128,7 +129,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    "DEFAULT_RENDERER_CLASSES": ("users.custom_render.CustomJsonRender",)
 }
 
 # REST_FRAMEWORK = {
@@ -146,6 +148,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'user_verification.middleware.UserVerificationMiddleWare',
 ]
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

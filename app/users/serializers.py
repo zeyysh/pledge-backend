@@ -1,5 +1,3 @@
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -26,7 +24,8 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id', 'first_name', 'last_name', 'email', 'birth_date', 'phone_number', 'password')
+        fields = (
+        'id', 'first_name', 'last_name', 'email', 'birth_date', 'phone_number', 'password', 'user_verification')
         model = User
         extra_kwargs = {'password': {'write_only': True}}
 

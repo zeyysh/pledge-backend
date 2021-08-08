@@ -20,7 +20,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    url="https://papp.rastava.com/",
+    # url="https://papp.rastava.com/",
 )
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('api/auth/', example_view, name='auth check'),
     path("admin/", admin.site.urls),
+    path('user_verification/', include('user_verification.urls')),
     # path('document/', include('document.urls')),
     # path('notification/', include('notification.urls')),
     # path('payment/', include('payment.urls')),

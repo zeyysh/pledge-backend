@@ -1,8 +1,5 @@
 # Pledge Django
 
-## Want to learn how to build this?
-
-Check out the [post](https://testdriven.io/dockerizing-django-with-postgres-gunicorn-and-nginx).
 
 ## Want to use this project?
 
@@ -33,5 +30,5 @@ Uses gunicorn + nginx.
     $ docker-compose -f docker-compose.prod.yml up -d --build
     ```
 
-   Test it out at [http://localhost:180](http://localhost:180). No mounted folders. To apply changes, the image must be
+   Test it out at [http://localhost](http://localhost:180). No mounted folders. To apply changes, the image must be
    re-built.

@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from rest_framework_api_key.models import AbstractAPIKey, BaseAPIKeyManager
 
+from user_verification.models import VerificationLevel
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=128)
@@ -108,6 +110,7 @@ class User(AbstractUser, GeneralModel):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    user_verification = models.ManyToManyField(VerificationLevel, default='Test_verification')
 
     objects = UserManager()
 
